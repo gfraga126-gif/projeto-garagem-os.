@@ -1,0 +1,145 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #000000; 
+    background-image: url('15.png'); /* Sua imagem de fundo se mantém intacta aqui */
+    background-size: 100% auto; 
+    background-position: top center; 
+    background-repeat: no-repeat; 
+    background-attachment: scroll; 
+}
+
+.estrutura-principal {
+    margin-top: 32%; 
+}
+
+@media (max-width: 992px) {
+    .estrutura-principal { margin-top: 42%; }
+}
+
+@media (max-width: 576px) {
+    .estrutura-principal { margin-top: 58%; }
+}
+
+.custom-shadow {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); 
+    background-color: #ffffff;
+}
+
+.cabecalho-gradiente {
+    background: linear-gradient(135deg, #151515 0%, #ffb703 100%); 
+    color: #ffffff;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 18px 20px;
+}
+
+.custom-input {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.custom-input:focus {
+    border-color: #ffb703;
+    box-shadow: 0 0 0 0.25rem rgba(255, 183, 3, 0.25);
+    color: #212529;
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.btn-salvar {
+    background-color: #ffb703; 
+    border: none;
+    color: #000000;
+    font-weight: 600;
+}
+
+.cabecalho-tabela th {
+    background-color: #151515;
+    color: #ffffff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    padding: 16px 12px;
+}
+
+.table tbody tr:hover {
+    transform: translateX(6px); 
+    background-color: #f8f9fa;
+    border-left: 4px solid #ffb703; 
+}
+
+.badge {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   ANIMAÇÕES DO FLUXO DO SISTEMA
+   ========================================== */
+.tab-pane {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-salvar:hover {
+    transform: scale(1.03); 
+    box-shadow: 0 8px 20px rgba(255, 183, 3, 0.5); 
+}
+
+.table tbody tr {
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-pills .nav-link {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* ==========================================
+   EFEITOS DAS FIGURINHAS ANIMADAS (ÍCONES)
+   ========================================== */
+@keyframes pulsaCliente {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); color: #ffb703; }
+    100% { transform: scale(1); }
+}
+.anim-cliente { display: inline-block; animation: pulsaCliente 2s infinite ease-in-out; }
+
+@keyframes motorLigado {
+    0% { transform: translateX(0px) translateY(0px); }
+    25% { transform: translateX(1px) translateY(-1px); }
+    50% { transform: translateX(0px) translateY(0px); }
+    75% { transform: translateX(-1px) translateY(1px); }
+    100% { transform: translateX(0px) translateY(0px); }
+}
+.anim-carro { display: inline-block; animation: motorLigado 0.5s infinite; }
+
+@keyframes apertaParafuso {
+    0% { transform: rotate(0deg); }
+    30% { transform: rotate(25deg); color: #ffb703;}
+    70% { transform: rotate(-10deg); }
+    100% { transform: rotate(0deg); }
+}
+.anim-ferramenta { display: inline-block; animation: apertaParafuso 2.5s infinite; }
+
+@keyframes flutuaCaixa {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-4px); color: #219ebc; }
+    100% { transform: translateY(0); }
+}
+.anim-estoque { display: inline-block; animation: flutuaCaixa 2.5s infinite ease-in-out; }

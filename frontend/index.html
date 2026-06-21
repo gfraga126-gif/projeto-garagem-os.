@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GarageOS Pro - Dark Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #000000; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle at 50% 0%, #1f2937 0%, #000000 70%); color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .app-container { width: 100%; max-width: 420px; height: 100dvh; background-color: #0a0a0a; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative; }
+        @media (min-width: 640px) { .app-container { height: 90vh; border-radius: 2.5rem; border: 8px solid #171717; } }
+        input, textarea, select { background-color: #171717 !important; border: 1px solid #333333 !important; color: #ffffff !important; }
+        input:focus, textarea:focus, select:focus { border-color: #eab308 !important; outline: none; }
+        select option { background-color: #171717 !important; color: #ffffff !important; }
+        ::placeholder { color: #52525b !important; }
+        .card-dark { background-color: #121212; border: 1px solid #27272a; border-radius: 1rem; }
+        .text-accent { color: #eab308; } .bg-accent { background-color: #eab308; color: #000000; } .border-accent { border-color: #eab308; }
+    </style>
+</head>
+<body class="min-h-screen antialiased relative">
+
+    <div class="fixed inset-0 z-0 flex items-center justify-center opacity-15 pointer-events-none">
+        <img src="15.png" alt="Fundo GarageOS" class="w-[90vw] max-w-5xl object-contain">
+    </div>
+
+    <div class="app-container z-10 relative">
+
+        <div id="tela-app" class="flex-1 flex flex-col h-full w-full">
+            
+            <div class="px-5 pt-10 pb-4 bg-[#0a0a0a] flex flex-col items-center z-20 border-b border-[#1a1a1a]">
+                <img id="logo-img" src="15.png" alt="Logo" class="h-16 object-contain transition-all duration-300">
+                <span id="relogio" class="text-[10px] font-mono text-yellow-400 mt-2 bg-yellow-950/40 px-3 py-1 rounded-full border border-yellow-500/20">00:00:00</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-5 pt-4 pb-24 hide-scrollbar bg-[#0a0a0a]">
+                
+                <div id="view-home" class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <div><h2 class="text-2xl font-bold">Olá, Equipe!</h2><p class="text-xs text-gray-400">Bem-vindo ao painel da sua oficina</p></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="card-dark p-4 border-l-4 border-l-yellow-500"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1 flex items-center gap-1"><i class="fa-regular fa-circle-dot text-yellow-500 text-[8px]"></i> OS ABERTAS</div><div id="dash-abertas" class="text-3xl font-black">00</div></div>
+                        <div class="card-dark p-4 border-l-4 border-l-green-500"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1 flex items-center gap-1"><i class="fa-solid fa-check text-green-500 text-[8px]"></i> OS PRONTAS</div><div id="dash-prontas" class="text-3xl font-black">00</div></div>
+                        
+                        <div class="col-span-2 card-dark p-4 bg-gradient-to-r from-[#121212] to-[#1a1a1a]">
+                            <div class="text-[10px] text-gray-500 font-bold uppercase mb-3 border-b border-[#222] pb-2">Detalhes Financeiros (Concluídas)</div>
+                            <div class="flex justify-between items-center mb-1.5"><span class="text-xs text-gray-400"><i class="fa-solid fa-wrench mr-2 text-gray-600"></i>Mão de Obra</span><span id="dash-mao-obra" class="text-sm font-bold text-gray-200">R$ 0,00</span></div>
+                            <div class="flex justify-between items-center mb-1.5"><span class="text-xs text-gray-400"><i class="fa-solid fa-box-open mr-2 text-gray-600"></i>Peças</span><span id="dash-pecas" class="text-sm font-bold text-gray-200">R$ 0,00</span></div>
+                            <div class="flex justify-between items-center mb-4"><span class="text-xs text-gray-400"><i class="fa-solid fa-hand-holding-dollar mr-2 text-green-600"></i>Comissão Peças (3%)</span><span id="dash-comissao" class="text-sm font-bold text-green-500">+ R$ 0,00</span></div>
+                            
+                            <div class="pt-2 border-t border-[#222] flex justify-between items-end"><div class="text-[10px] text-accent font-bold uppercase">Faturamento Total</div><div id="dash-total" class="text-3xl font-black text-accent">R$ 0,00</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-estoque" class="hidden space-y-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2 class="font-black text-sm uppercase tracking-widest">Estoque de Peças</h2>
+                        <i class="fa-solid fa-boxes-stacked text-accent"></i>
+                    </div>
+
+                    <form id="formEstoque" class="card-dark p-4 space-y-4 border border-accent">
+                        <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2"><i class="fa-solid fa-plus-circle"></i> Cadastrar Nova Peça</div>
+                        <input type="text" id="nome_peca" placeholder="Nome da Peça (Ex: Vela NGK)" required class="w-full p-3 rounded-lg text-sm">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="text-[9px] text-gray-500 ml-1">Preço de Venda (R$)</label><input type="number" step="0.01" id="preco_peca" placeholder="0.00" required class="w-full p-3 rounded-lg text-sm"></div>
+                            <div><label class="text-[9px] text-gray-500 ml-1">Qtd. em Estoque</label><input type="number" id="quantidade_peca" placeholder="0" required class="w-full p-3 rounded-lg text-sm"></div>
+                        </div>
+                        <button type="submit" class="w-full bg-accent text-black font-black py-3 rounded-xl shadow-[0_0_15px_rgba(234,179,8,0.2)] active:scale-95 transition-transform text-sm uppercase">Salvar Peça</button>
+                    </form>
+
+                    <div class="mt-6 space-y-3">
+                        <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest px-2">Itens Disponíveis</div>
+                        <div id="estoque-lista"></div>
+                    </div>
+                </div>
+
+                <div id="view-agendar" class="hidden space-y-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2 class="font-black text-sm uppercase tracking-widest">Nova Ordem</h2>
+                        <i class="fa-solid fa-floppy-disk text-accent"></i>
+                    </div>
+
+                    <form id="formOS" class="space-y-4">
+                        <div class="card-dark p-4 space-y-4">
+                            <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2 mb-2"><i class="fa-solid fa-car"></i> Veículo e Cliente</div>
+                            <div class="flex gap-2">
+                                <input type="text" id="modelo_veiculo" placeholder="Modelo do Veículo" required class="w-2/3 p-3 rounded-lg text-sm">
+                                <input type="text" id="placa_veiculo" placeholder="Placa" required maxlength="8" class="w-1/3 p-3 rounded-lg uppercase font-mono text-center text-sm text-accent" oninput="let v = this.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); if(v.length > 3) v = v.substring(0,3) + '-' + v.substring(3,7); this.value = v;">
+                            </div>
+                        </div>
+
+                        <div class="card-dark p-4 space-y-4">
+                            <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2 mb-2"><i class="fa-solid fa-clipboard-list"></i> Detalhes do Serviço</div>
+                            <textarea id="descricao_servico" placeholder="Descreva o problema ou manutenção..." required class="w-full p-3 rounded-lg text-sm h-16"></textarea>
+                            
+                            <div class="border-t border-[#222] pt-3">
+                                <label class="text-[9px] text-accent font-bold uppercase ml-1 block mb-1">Selecionar Peça do Estoque</label>
+                                <select id="select_peca" class="w-full p-3 rounded-lg text-sm font-bold appearance-none bg-[#1a1a1a]">
+                                    <option value="" data-preco="0">Nenhuma peça (Ou digitar manual)</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <div><label class="text-[9px] text-gray-500 ml-1">Valor Mão de Obra</label><input type="number" step="0.01" id="valor_mao_obra" placeholder="0.00" required class="w-full p-3 rounded-lg text-sm"></div>
+                                <div><label class="text-[9px] text-gray-500 ml-1">Valor das Peças</label><input type="number" step="0.01" id="valor_pecas" placeholder="0.00" required class="w-full p-3 rounded-lg text-sm transition-opacity"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="text-[9px] text-gray-500 ml-1">Data Abertura</label><input type="date" id="data_agendamento" required class="w-full p-2.5 rounded-lg text-xs"></div>
+                                <div><label class="text-[9px] text-gray-500 ml-1">Horário Check-in</label><input type="time" id="horario_entrega" required class="w-full p-2.5 rounded-lg text-xs"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="text-[9px] text-gray-500 ml-1">Tempo Estimado</label><input type="time" id="tempo_estimado" required class="w-full p-2.5 rounded-lg text-xs"></div>
+                                <div><label class="text-[9px] text-gray-500 ml-1">Logística</label><select id="logistica" class="w-full p-2.5 rounded-lg text-xs appearance-none"><option value="Cliente busca">Cliente busca</option><option value="Mecânico leva">Mecânico leva</option></select></div>
+                            </div>
+                        </div>
+
+                        <div class="card-dark p-4 space-y-4">
+                            <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2 mb-2"><i class="fa-solid fa-credit-card"></i> Pagamento e Resumo</div>
+                            <select id="pagamento" class="w-full p-3 rounded-lg text-sm font-bold appearance-none bg-[#1a1a1a]">
+                                <option value="PIX">💠 PIX (5% OFF)</option>
+                                <option value="DINHEIRO">💵 DINHEIRO (5% OFF)</option>
+                                <option value="CARTAO_1X">💳 CARTÃO 1X (S/ JUROS)</option>
+                                <option value="CARTAO_3X">💳 CARTÃO 3X (S/ JUROS)</option>
+                                <option value="CARTAO_4X">💳 CARTÃO 4X (+3% JUROS)</option>
+                                <option value="CARTAO_12X">💳 CARTÃO 12X (+3% JUROS)</option>
+                            </select>
+
+                            <div class="bg-[#0f0f0f] p-3 rounded-lg border border-[#222] space-y-1 text-xs">
+                                <div class="flex justify-between text-gray-400"><span>Subtotal:</span><span id="preview-subtotal">R$ 0,00</span></div>
+                                <div class="flex justify-between"><span id="preview-label-desconto" class="text-gray-400">Desconto:</span><span id="preview-desconto" class="font-bold text-gray-500">R$ 0,00</span></div>
+                                <div class="flex justify-between"><span class="text-gray-400">Comissão Peças (3%):</span><span id="preview-comissao" class="font-bold text-green-500">+ R$ 0,00</span></div>
+                                <div class="flex justify-between items-end pt-2 border-t border-[#222] mt-2">
+                                    <span class="text-[10px] font-bold text-gray-400">TOTAL ESTIMADO</span>
+                                    <span id="preview-total" class="text-lg font-black text-accent">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2 pb-6">
+                            <button type="submit" class="w-full bg-accent text-black font-black py-4 rounded-xl shadow-[0_0_15px_rgba(234,179,8,0.2)] active:scale-95 transition-transform text-sm uppercase tracking-widest">Salvar Ordem de Serviço <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="view-painel" class="hidden space-y-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2 class="font-black text-sm uppercase tracking-widest">Histórico de O.S.</h2>
+                        <i class="fa-solid fa-filter text-accent"></i>
+                    </div>
+                    <div class="space-y-3" id="os-lista">
+                        </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-0 w-full bg-[#121212] border-t border-[#222] flex justify-around items-center px-1 py-3 z-30 pb-6 sm:pb-3 rounded-b-[2rem]">
+                <button onclick="changeTab('home')" id="btn-home" class="w-1/4 flex flex-col items-center gap-1 transition-all text-accent">
+                    <i class="fa-solid fa-house text-xl"></i><span class="text-[8px] font-bold uppercase">Início</span>
+                </button>
+                <button onclick="changeTab('estoque')" id="btn-estoque" class="w-1/4 flex flex-col items-center gap-1 transition-all text-gray-500">
+                    <i class="fa-solid fa-boxes-stacked text-xl"></i><span class="text-[8px] font-bold uppercase">Estoque</span>
+                </button>
+                <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center -mt-8 shadow-[0_4px_15px_rgba(234,179,8,0.4)] text-black cursor-pointer" onclick="changeTab('agendar')">
+                    <i class="fa-solid fa-plus text-2xl"></i>
+                </div>
+                <button onclick="changeTab('painel')" id="btn-painel" class="w-1/4 flex flex-col items-center gap-1 transition-all text-gray-500">
+                    <i class="fa-solid fa-clock-rotate-left text-xl"></i><span class="text-[8px] font-bold uppercase">Histórico</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
