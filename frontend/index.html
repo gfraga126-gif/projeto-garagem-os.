@@ -26,70 +26,92 @@
     </div>
 
     <div class="app-container z-10 relative">
-
         <div id="tela-app" class="flex-1 flex flex-col h-full w-full">
             
-            <div class="px-5 pt-10 pb-4 bg-[#0a0a0a] flex flex-col items-center z-20 border-b border-[#1a1a1a]">
-                <img id="logo-img" src="15.png" alt="Logo" class="h-16 object-contain transition-all duration-300">
-                <span id="relogio" class="text-[10px] font-mono text-yellow-400 mt-2 bg-yellow-950/40 px-3 py-1 rounded-full border border-yellow-500/20">00:00:00</span>
+            <div class="px-5 pt-10 pb-4 bg-[#0a0a0a] flex justify-between items-center z-20 border-b border-[#1a1a1a]">
+                <img id="logo-img" src="15.png" alt="Logo" class="h-12 object-contain transition-all duration-300">
+                <div class="flex flex-col items-end gap-1">
+                    <span id="relogio" class="text-[10px] font-mono text-yellow-400 bg-yellow-950/40 px-2 py-0.5 rounded-full border border-yellow-500/20">00:00:00</span>
+                    <button onclick="changeTab('agendar')" class="text-[10px] bg-accent text-black font-black px-2 py-1 rounded flex items-center gap-1 active:scale-95 transition-transform uppercase"><i class="fa-solid fa-plus-circle"></i> Criar</button>
+                </div>
             </div>
 
             <div class="flex-1 overflow-y-auto px-5 pt-4 pb-24 hide-scrollbar bg-[#0a0a0a]">
                 
+                <!-- HOME DASHBOARD E AGENDA DA SEMANA -->
                 <div id="view-home" class="space-y-6">
-                    <div class="flex justify-between items-center">
-                        <div><h2 class="text-2xl font-bold">Olá, Equipe!</h2><p class="text-xs text-gray-400">Bem-vindo ao painel da sua oficina</p></div>
-                    </div>
-
+                    <div><h2 class="text-2xl font-bold">Olá, Equipe!</h2><p class="text-xs text-gray-400">Painel de gerenciamento geral</p></div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="card-dark p-4 border-l-4 border-l-yellow-500"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1 flex items-center gap-1"><i class="fa-regular fa-circle-dot text-yellow-500 text-[8px]"></i> OS ABERTAS</div><div id="dash-abertas" class="text-3xl font-black">00</div></div>
-                        <div class="card-dark p-4 border-l-4 border-l-green-500"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1 flex items-center gap-1"><i class="fa-solid fa-check text-green-500 text-[8px]"></i> OS PRONTAS</div><div id="dash-prontas" class="text-3xl font-black">00</div></div>
-                        
+                        <div class="card-dark p-4 border-l-4 border-l-yellow-500"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1">OS ABERTAS</div><div id="dash-abertas" class="text-3xl font-black">00</div></div>
+                        <div class="card-dark p-4 border-l-4 border-l-green-500"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1">OS PRONTAS</div><div id="dash-prontas" class="text-3xl font-black">00</div></div>
                         <div class="col-span-2 card-dark p-4 bg-gradient-to-r from-[#121212] to-[#1a1a1a]">
                             <div class="text-[10px] text-gray-500 font-bold uppercase mb-3 border-b border-[#222] pb-2">Detalhes Financeiros (Concluídas)</div>
-                            <div class="flex justify-between items-center mb-1.5"><span class="text-xs text-gray-400"><i class="fa-solid fa-wrench mr-2 text-gray-600"></i>Mão de Obra</span><span id="dash-mao-obra" class="text-sm font-bold text-gray-200">R$ 0,00</span></div>
-                            <div class="flex justify-between items-center mb-1.5"><span class="text-xs text-gray-400"><i class="fa-solid fa-box-open mr-2 text-gray-600"></i>Peças</span><span id="dash-pecas" class="text-sm font-bold text-gray-200">R$ 0,00</span></div>
-                            <div class="flex justify-between items-center mb-4"><span class="text-xs text-gray-400"><i class="fa-solid fa-hand-holding-dollar mr-2 text-green-600"></i>Comissão Peças (3%)</span><span id="dash-comissao" class="text-sm font-bold text-green-500">+ R$ 0,00</span></div>
-                            
+                            <div class="flex justify-between items-center mb-1.5"><span class="text-xs text-gray-400">Mão de Obra</span><span id="dash-mao-obra" class="text-sm font-bold text-gray-200">R$ 0,00</span></div>
+                            <div class="flex justify-between items-center mb-1.5"><span class="text-xs text-gray-400">Peças</span><span id="dash-pecas" class="text-sm font-bold text-gray-200">R$ 0,00</span></div>
+                            <div class="flex justify-between items-center mb-4"><span class="text-xs text-gray-400">Comissão Peças (3%)</span><span id="dash-comissao" class="text-sm font-bold text-green-500">+ R$ 0,00</span></div>
                             <div class="pt-2 border-t border-[#222] flex justify-between items-end"><div class="text-[10px] text-accent font-bold uppercase">Faturamento Total</div><div id="dash-total" class="text-3xl font-black text-accent">R$ 0,00</div></div>
                         </div>
                     </div>
+
+                    <!-- 👉 A AGENDA VOLTOU AQUI! -->
+                    <div class="mt-4">
+                        <div class="flex justify-between items-center mb-3 border-b border-[#222] pb-2">
+                            <h3 class="text-xs font-bold text-gray-300 uppercase tracking-widest"><i class="fa-regular fa-calendar-check text-accent mr-2"></i>Agenda da Semana</h3>
+                            <span id="badge-agenda-qtd" class="bg-accent text-black text-[9px] font-black px-2 py-0.5 rounded-full">0</span>
+                        </div>
+                        <div id="agenda-semana-lista" class="space-y-2"></div>
+                    </div>
                 </div>
 
+                <!-- ESTOQUE -->
                 <div id="view-estoque" class="hidden space-y-4">
                     <div class="flex items-center justify-between mb-4"><button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button><h2 class="font-black text-sm uppercase tracking-widest">Estoque</h2><i class="fa-solid fa-boxes-stacked text-accent"></i></div>
                     <form id="formEstoque" class="card-dark p-4 space-y-4 border border-accent">
-                        <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2"><i class="fa-solid fa-plus-circle"></i> Cadastrar Peça</div>
                         <input type="text" id="nome_peca" placeholder="Nome da Peça" required class="w-full p-3 rounded-lg text-sm">
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="text-[9px] text-gray-500 ml-1">Preço (R$)</label><input type="number" step="0.01" id="preco_peca" required class="w-full p-3 rounded-lg text-sm"></div>
                             <div><label class="text-[9px] text-gray-500 ml-1">Quantidade</label><input type="number" id="quantidade_peca" required class="w-full p-3 rounded-lg text-sm"></div>
                         </div>
-                        <button type="submit" class="w-full bg-accent text-black font-black py-3 rounded-xl shadow-[0_0_15px_rgba(234,179,8,0.2)] active:scale-95 text-sm uppercase">Salvar Peça</button>
+                        <button type="submit" class="w-full bg-accent text-black font-black py-3 rounded-xl text-sm uppercase">Salvar Peça</button>
                     </form>
-                    <div class="mt-6 space-y-3"><div class="text-[10px] text-gray-500 font-bold uppercase px-2">Itens Disponíveis</div><div id="estoque-lista"></div></div>
+                    <div id="estoque-lista" class="space-y-3 mt-4"></div>
                 </div>
 
+                <!-- EQUIPE -->
                 <div id="view-equipe" class="hidden space-y-4">
                     <div class="flex items-center justify-between mb-4"><button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button><h2 class="font-black text-sm uppercase tracking-widest">Mecânicos</h2><i class="fa-solid fa-users-gear text-accent"></i></div>
                     <form id="formEquipe" class="card-dark p-4 space-y-4 border border-accent">
-                        <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2"><i class="fa-solid fa-plus-circle"></i> Cadastrar Mecânico</div>
-                        <input type="text" id="nome_mecanico" placeholder="Nome do Profissional" required class="w-full p-3 rounded-lg text-sm">
+                        <input type="text" id="nome_mecanico" placeholder="Nome do Mecânico" required class="w-full p-3 rounded-lg text-sm">
                         <div class="grid grid-cols-2 gap-2">
-                            <div><label class="text-[9px] text-gray-500 ml-1">Especialidade</label><input type="text" id="especialidade_mecanico" placeholder="Ex: Motor" required class="w-full p-3 rounded-lg text-sm"></div>
-                            <div><label class="text-[9px] text-gray-500 ml-1">Telefone</label><input type="text" id="telefone_mecanico" placeholder="(00) 00000" required class="w-full p-3 rounded-lg text-sm"></div>
+                            <div><label class="text-[9px] text-gray-500 ml-1">Especialidade</label><input type="text" id="especialidade_mecanico" required class="w-full p-3 rounded-lg text-sm"></div>
+                            <div><label class="text-[9px] text-gray-500 ml-1">Telefone</label><input type="text" id="telefone_mecanico" required class="w-full p-3 rounded-lg text-sm"></div>
                         </div>
-                        <button type="submit" class="w-full bg-accent text-black font-black py-3 rounded-xl shadow-[0_0_15px_rgba(234,179,8,0.2)] active:scale-95 text-sm uppercase">Salvar Mecânico</button>
+                        <button type="submit" class="w-full bg-accent text-black font-black py-3 rounded-xl text-sm uppercase">Salvar Mecânico</button>
                     </form>
-                    <div class="mt-6 space-y-3"><div class="text-[10px] text-gray-500 font-bold uppercase px-2">Equipe Cadastrada</div><div id="equipe-lista"></div></div>
+                    <div id="equipe-lista" class="space-y-3 mt-4"></div>
                 </div>
 
-                <div id="view-agendar" class="hidden space-y-4">
-                    <div class="flex items-center justify-between mb-4"><button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button><h2 class="font-black text-sm uppercase tracking-widest">Nova Ordem</h2><i class="fa-solid fa-floppy-disk text-accent"></i></div>
+                <!-- ORÇAMENTOS -->
+                <div id="view-orcamentos" class="hidden space-y-4">
+                    <div class="flex items-center justify-between mb-4"><button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button><h2 class="font-black text-sm uppercase tracking-widest">Orçamentos</h2><i class="fa-solid fa-file-invoice-dollar text-accent"></i></div>
+                    <div id="orcamento-lista" class="space-y-3"></div>
+                </div>
 
+                <!-- NOVO REGISTRO (FORM) -->
+                <div id="view-agendar" class="hidden space-y-4">
+                    <div class="flex items-center justify-between mb-4"><button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button><h2 class="font-black text-sm uppercase tracking-widest">Novo Registro</h2><i class="fa-solid fa-file-signature text-accent"></i></div>
                     <form id="formOS" class="space-y-4">
+                        
+                        <div class="card-dark p-4 space-y-2">
+                            <label class="text-[9px] text-accent font-bold uppercase ml-1">Tipo de Entrada</label>
+                            <select id="status_servico" class="w-full p-3 rounded-lg text-sm font-bold appearance-none bg-[#1a1a1a]">
+                                <option value="Orçamento">📄 Salvar como Orçamento</option>
+                                <option value="Pendente">🛠️ Abrir Direto como Ordem de Serviço</option>
+                            </select>
+                        </div>
+
                         <div class="card-dark p-4 space-y-4">
-                            <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2 mb-2"><i class="fa-solid fa-car"></i> Veículo e Cliente</div>
+                            <div class="text-[10px] text-accent font-bold uppercase mb-2"><i class="fa-solid fa-car"></i> Veículo e Cliente</div>
                             <div class="flex gap-2">
                                 <input type="text" id="modelo_veiculo" placeholder="Modelo do Veículo" required class="w-2/3 p-3 rounded-lg text-sm">
                                 <input type="text" id="placa_veiculo" placeholder="Placa" required maxlength="8" class="w-1/3 p-3 rounded-lg uppercase font-mono text-center text-sm text-accent">
@@ -97,76 +119,61 @@
                         </div>
 
                         <div class="card-dark p-4 space-y-4">
-                            <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2 mb-2"><i class="fa-solid fa-clipboard-list"></i> Serviço & Profissional</div>
-                            <textarea id="descricao_servico" placeholder="Descreva o problema..." required class="w-full p-3 rounded-lg text-sm h-16"></textarea>
-                            
-                            <div class="border-t border-[#222] pt-3 mt-3">
-                                <label class="text-[9px] text-accent font-bold uppercase ml-1 block mb-1">Mecânico Responsável</label>
-                                <select id="select_mecanico" class="w-full p-3 rounded-lg text-sm font-bold appearance-none bg-[#1a1a1a]">
-                                    <option value="">Não atribuído</option>
-                                    </select>
-                            </div>
-
-                            <div class="border-t border-[#222] pt-3">
-                                <label class="text-[9px] text-accent font-bold uppercase ml-1 block mb-1">Selecionar Peça</label>
-                                <select id="select_peca" class="w-full p-3 rounded-lg text-sm font-bold appearance-none bg-[#1a1a1a]">
-                                    <option value="" data-preco="0">Nenhuma peça</option>
-                                </select>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2 mt-2">
-                                <div><label class="text-[9px] text-gray-500 ml-1">Mão de Obra (R$)</label><input type="number" step="0.01" id="valor_mao_obra" required class="w-full p-3 rounded-lg text-sm"></div>
-                                <div><label class="text-[9px] text-gray-500 ml-1">Valor Peças (R$)</label><input type="number" step="0.01" id="valor_pecas" required class="w-full p-3 rounded-lg text-sm"></div>
-                            </div>
-
+                            <div class="text-[10px] text-accent font-bold uppercase mb-2"><i class="fa-solid fa-clipboard-list"></i> Detalhes</div>
+                            <textarea id="descricao_servico" placeholder="Descrição do problema ou peças requeridas..." required class="w-full p-3 rounded-lg text-sm h-16"></textarea>
                             <div class="grid grid-cols-2 gap-2">
-                                <div><label class="text-[9px] text-gray-500 ml-1">Data</label><input type="date" id="data_agendamento" required class="w-full p-2.5 rounded-lg text-xs"></div>
-                                <div><label class="text-[9px] text-gray-500 ml-1">Horário</label><input type="time" id="horario_entrega" required class="w-full p-2.5 rounded-lg text-xs"></div>
+                                <div><label class="text-[9px] text-accent font-bold">Mecânico</label><select id="select_mecanico" class="w-full p-2.5 rounded-lg text-xs font-bold bg-[#1a1a1a]"><option value="">Não atribuído</option></select></div>
+                                <div><label class="text-[9px] text-accent font-bold">Peça Estoque</label><select id="select_peca" class="w-full p-2.5 rounded-lg text-xs font-bold bg-[#1a1a1a]"><option value="" data-preco="0">Nenhuma</option></select></div>
                             </div>
                             <div class="grid grid-cols-2 gap-2">
-                                <div><label class="text-[9px] text-gray-500 ml-1">Tempo Est.</label><input type="time" id="tempo_estimado" required class="w-full p-2.5 rounded-lg text-xs"></div>
-                                <div><label class="text-[9px] text-gray-500 ml-1">Logística</label><select id="logistica" class="w-full p-2.5 rounded-lg text-xs appearance-none"><option value="Cliente busca">Cliente busca</option><option value="Mecânico leva">Mecânico leva</option></select></div>
+                                <div><label class="text-[9px] text-gray-500">Mão de Obra (R$)</label><input type="number" step="0.01" id="valor_mao_obra" required class="w-full p-3 rounded-lg text-sm"></div>
+                                <div><label class="text-[9px] text-gray-500">Valor Peças (R$)</label><input type="number" step="0.01" id="valor_pecas" required class="w-full p-3 rounded-lg text-sm"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="text-[9px] text-gray-500">Data</label><input type="date" id="data_agendamento" required class="w-full p-2.5 rounded-lg text-xs"></div>
+                                <div><label class="text-[9px] text-gray-500">Horário</label><input type="time" id="horario_entrega" required class="w-full p-2.5 rounded-lg text-xs"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="text-[9px] text-gray-500">Tempo Estimado</label><input type="time" id="tempo_estimado" required class="w-full p-2.5 rounded-lg text-xs"></div>
+                                <div><label class="text-[9px] text-gray-500">Logística</label><select id="logistica" class="w-full p-2.5 rounded-lg text-xs appearance-none"><option value="Cliente busca">Cliente busca</option><option value="Mecânico leva">Mecânico leva</option></select></div>
                             </div>
                         </div>
 
                         <div class="card-dark p-4 space-y-4">
-                            <div class="text-[10px] text-accent font-bold uppercase flex items-center gap-2 mb-2"><i class="fa-solid fa-credit-card"></i> Pagamento e Resumo</div>
+                            <div class="text-[10px] text-accent font-bold uppercase mb-2"><i class="fa-solid fa-credit-card"></i> Pagamento</div>
                             <select id="pagamento" class="w-full p-3 rounded-lg text-sm font-bold appearance-none bg-[#1a1a1a]">
                                 <option value="PIX">💠 PIX (5% OFF)</option>
                                 <option value="DINHEIRO">💵 DINHEIRO (5% OFF)</option>
                                 <option value="CARTAO_1X">💳 CARTÃO 1X (S/ JUROS)</option>
                                 <option value="CARTAO_4X">💳 CARTÃO 4X (+3% JUROS)</option>
                             </select>
-
                             <div class="bg-[#0f0f0f] p-3 rounded-lg border border-[#222] space-y-1 text-xs">
                                 <div class="flex justify-between text-gray-400"><span>Subtotal:</span><span id="preview-subtotal">R$ 0,00</span></div>
                                 <div class="flex justify-between"><span id="preview-label-desconto" class="text-gray-400">Desconto:</span><span id="preview-desconto" class="font-bold text-gray-500">R$ 0,00</span></div>
-                                <div class="flex justify-between"><span class="text-gray-400">Comissão Peças (3%):</span><span id="preview-comissao" class="font-bold text-green-500">+ R$ 0,00</span></div>
-                                <div class="flex justify-between items-end pt-2 border-t border-[#222] mt-2">
-                                    <span class="text-[10px] font-bold text-gray-400">TOTAL ESTIMADO</span>
-                                    <span id="preview-total" class="text-lg font-black text-accent">R$ 0,00</span>
-                                </div>
+                                <div class="flex justify-between items-end pt-2 border-t border-[#222] mt-2"><span class="text-[10px] font-bold text-gray-400">TOTAL ESTIMADO</span><span id="preview-total" class="text-lg font-black text-accent">R$ 0,00</span></div>
                             </div>
                         </div>
-                        <div class="pt-2 pb-6">
-                            <button type="submit" class="w-full bg-accent text-black font-black py-4 rounded-xl shadow-[0_0_15px_rgba(234,179,8,0.2)] active:scale-95 text-sm uppercase">Salvar Ordem de Serviço</button>
-                        </div>
+                        <button type="submit" class="w-full bg-accent text-black font-black py-4 rounded-xl text-sm uppercase tracking-widest active:scale-95 transition-transform">Gravar Registro <i class="fa-solid fa-arrow-right"></i></button>
                     </form>
                 </div>
 
+                <!-- HISTÓRICO -->
                 <div id="view-painel" class="hidden space-y-4">
-                    <div class="flex items-center justify-between mb-4"><button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button><h2 class="font-black text-sm uppercase tracking-widest">Histórico de O.S.</h2><i class="fa-solid fa-filter text-accent"></i></div>
-                    <div class="space-y-3" id="os-lista"></div>
+                    <div class="flex items-center justify-between mb-4"><button onclick="changeTab('home')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button><h2 class="font-black text-sm uppercase tracking-widest">Histórico de OS</h2><i class="fa-solid fa-filter text-accent"></i></div>
+                    <div id="os-lista" class="space-y-3"></div>
                 </div>
+
             </div>
 
-            <div class="absolute bottom-0 w-full bg-[#121212] border-t border-[#222] flex justify-between items-center px-2 py-3 z-30 pb-6 sm:pb-3 rounded-b-[2rem]">
-                <button onclick="changeTab('home')" id="btn-home" class="w-1/5 flex flex-col items-center gap-1 transition-all text-accent"><i class="fa-solid fa-house text-[18px]"></i><span class="text-[8px] font-bold uppercase">Início</span></button>
-                <button onclick="changeTab('estoque')" id="btn-estoque" class="w-1/5 flex flex-col items-center gap-1 transition-all text-gray-500"><i class="fa-solid fa-boxes-stacked text-[18px]"></i><span class="text-[8px] font-bold uppercase">Estoque</span></button>
-                <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center -mt-8 shadow-[0_4px_15px_rgba(234,179,8,0.4)] text-black cursor-pointer flex-shrink-0 mx-1" onclick="changeTab('agendar')"><i class="fa-solid fa-plus text-2xl"></i></div>
-                <button onclick="changeTab('equipe')" id="btn-equipe" class="w-1/5 flex flex-col items-center gap-1 transition-all text-gray-500"><i class="fa-solid fa-users-gear text-[18px]"></i><span class="text-[8px] font-bold uppercase">Equipe</span></button>
-                <button onclick="changeTab('painel')" id="btn-painel" class="w-1/5 flex flex-col items-center gap-1 transition-all text-gray-500"><i class="fa-solid fa-clock-rotate-left text-[18px]"></i><span class="text-[8px] font-bold uppercase">Histórico</span></button>
+            <!-- MENU BOTTOM NAVBAR -->
+            <div class="absolute bottom-0 w-full bg-[#121212] border-t border-[#222] flex justify-around items-center px-1 py-3 z-30 pb-6 sm:pb-3 rounded-b-[2rem]">
+                <button onclick="changeTab('home')" id="btn-home" class="w-1/5 flex flex-col items-center gap-1 text-accent"><i class="fa-solid fa-house text-lg"></i><span class="text-[7px] font-bold uppercase">Início</span></button>
+                <button onclick="changeTab('estoque')" id="btn-estoque" class="w-1/5 flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-boxes-stacked text-lg"></i><span class="text-[7px] font-bold uppercase">Estoque</span></button>
+                <button onclick="changeTab('orcamentos')" id="btn-orcamentos" class="w-1/5 flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-file-invoice-dollar text-lg"></i><span class="text-[7px] font-bold uppercase">Orçamentos</span></button>
+                <button onclick="changeTab('equipe')" id="btn-equipe" class="w-1/5 flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-users-gear text-lg"></i><span class="text-[7px] font-bold uppercase">Equipe</span></button>
+                <button onclick="changeTab('painel')" id="btn-painel" class="w-1/5 flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-clock-rotate-left text-lg"></i><span class="text-[7px] font-bold uppercase">Histórico</span></button>
             </div>
+
         </div>
     </div>
 

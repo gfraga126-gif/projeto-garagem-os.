@@ -1,6 +1,6 @@
 # 🚗 GarageOS Pro - Dark Edition
 
-Sistema web completo de gestão para oficinas mecânicas, desenvolvido com arquitetura em camadas e focado em dispositivos móveis (Design Mobile-First) com interface em tema escuro imersivo. O sistema gerencia o fluxo completo de ordens de serviço, controle automático de estoque de peças, comissionamento e alocação de mecânicos responsáveis.
+Sistema web completo de gestão para oficinas mecânicas, desenvolvido com arquitetura em camadas e focado em dispositivos móveis (Design Mobile-First) com interface em tema escuro imersivo. O sistema gerencia o fluxo completo de ordens de serviço, orçamentos, controle automático de estoque de peças, comissionamento e alocação de mecânicos responsáveis.
 
 Projeto desenvolvido como requisito avaliativo para a disciplina de **Programação II – Web** do curso de **Sistemas de Informação** (UEMG – Unidade Passos).
 
@@ -25,13 +25,14 @@ Projeto desenvolvido como requisito avaliativo para a disciplina de **Programaç
 
 ## ✨ Principais Funcionalidades Implementadas
 
-O sistema atende a todos os requisitos de **CRUD (Create, Read, Update, Delete)** exigidos, distribuídos nos seguintes módulos:
+O sistema atende a todos os requisitos de **CRUD (Create, Read, Update, Delete)** exigidos, distribuídos nos seguintes módulos inteligentes:
 
-* **Dashboard Financeiro Dinâmico:** Monitoramento em tempo real de ordens abertas e concluídas, faturamento bruto detalhado (mão de obra vs. peças) e cálculo automático de comissão de 3% sobre autopeças.
-* **Gestão de Equipe (Mecânicos):** Cadastro e listagem completa do corpo técnico da oficina mecânica.
-* **Vínculo de Atribuição:** Permite selecionar qual mecânico será responsável por executar determinada Ordem de Serviço, exibindo seu nome no histórico de atendimentos através de junções (`JOIN`) no banco de dados.
-* **Fluxo Inteligente de Estoque:** Ao vincular uma peça do estoque a uma OS, o sistema debita automaticamente 1 unidade do saldo do banco de dados e impede novas seleções caso o item atinja o estoque zero.
-* **Regras de Negócio e Precificação:** Cálculo em tempo real com descontos para pagamentos à vista (PIX/Dinheiro com 5% OFF) ou acréscimos automáticos de juros para parcelamentos em cartão de crédito (4x ou mais com +3% de juros).
+* **Módulo de Orçamentos e Integração WhatsApp:** Geração de orçamentos com botão para aprovação rápida (transformando o orçamento em OS e debitando o estoque na hora) e botão para envio do resumo tabulado diretamente para o WhatsApp do cliente.
+* **Agenda da Semana Inteligente:** O dashboard filtra e exibe dinamicamente apenas os serviços agendados para a semana atual (Domingo a Sábado), organizados por horário.
+* **Dashboard Financeiro:** Monitoramento em tempo real de ordens abertas e concluídas, faturamento bruto (mão de obra vs. peças) e cálculo automático de comissão de 3% sobre autopeças.
+* **Gestão de Equipe (Mecânicos):** Cadastro, listagem e vínculo de mecânicos responsáveis pela execução das Ordens de Serviço.
+* **Fluxo Automatizado de Estoque:** Ao vincular uma peça a uma OS (ou ao aprovar um orçamento), o sistema debita 1 unidade do banco de dados e impede seleções de itens sem saldo.
+* **Regras de Precificação:** Descontos automáticos para pagamentos à vista (PIX/Dinheiro com 5% OFF) ou acréscimos de juros para parcelamentos longos (Cartão 4x com +3% de juros).
 
 ---
 
