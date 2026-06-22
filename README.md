@@ -1,52 +1,28 @@
-# Sistema Garagem OS - Programação II
+# 🚗 GarageOS Pro - Dark Edition
 
-Projeto avaliativo desenvolvido para a disciplina de Programação II – Web. O sistema consiste em uma aplicação web para gerenciamento de Ordens de Serviço de uma oficina mecânica.
+Sistema completo de gestão para oficinas mecânicas. Uma aplicação web moderna, desenhada com foco em dispositivos móveis (Mobile First), utilizando um tema escuro imersivo. O sistema controla fluxo de serviços, comissionamento automático de peças e integração financeira inteligente.
 
 ## 🛠️ Tecnologias Utilizadas
-* **Front-end:** HTML, CSS, JavaScript Vanilla, Bootstrap (para responsividade).
-* **Back-end:** Node.js com Express.
+* **Front-end:** HTML5, CSS3, JavaScript (Vanilla API Fetch), Tailwind CSS (para responsividade e estilização UI/UX), FontAwesome (ícones).
+* **Back-end:** Node.js com Express e CORS.
 * **Banco de Dados:** MySQL.
 
-## 🚀 Como Executar a Aplicação
+## ✨ Funcionalidades Principais
+* **Dashboard Financeiro (Tempo Real):** Visualização de OS abertas vs. prontas, cálculo de faturamento total, separação automática entre mão de obra e peças, e cálculo de comissão de 3% sobre peças vendidas.
+* **Gestão de Estoque Inteligente:** Controle de entrada de peças. Ao vincular uma peça a uma nova Ordem de Serviço, o sistema deduz automaticamente 1 unidade do banco de dados e bloqueia a seleção de peças sem saldo.
+* **Ordens de Serviço Dinâmicas:**
+  * Lançamento de dados veiculares, cliente, logística e horários.
+  * Regras de pagamento processadas na hora: **5% de desconto** imediato no PIX/Dinheiro ou **3% de acréscimo** (juros) para Cartão parcelado em 4x ou mais.
+* **UI/UX Dinâmica:** Navegação por abas sem carregamento de página (*Single Page Application*), fundo translúcido e alternância dinâmica do logótipo da oficina consoante a secção acedida.
 
-### 1. Configuração do Banco de Dados
-* Acesse o seu servidor MySQL.
-* Execute o script contido no arquivo `database.sql` (localizado na raiz do projeto).
-* Isso criará o banco de dados `garagem_os_db` e a tabela `ordens_servico`.
+## 🚀 Como Executar o Projeto
 
-### 2. Executando o Back-end
-* Abra o terminal na pasta `backend`.
-* Instale as dependências rodando o comando: `npm install`.
-* Verifique no arquivo `server.js` se o usuário e senha do MySQL estão corretos.
-* Inicie o servidor rodando: `node server.js`.
-* O back-end ficará rodando em `http://localhost:3000`.
+### 1. Configurando o Banco de Dados
+* Abra seu servidor MySQL (via XAMPP, WAMP, MySQL Workbench, etc.).
+* Execute o script contido no arquivo `database.sql` para gerar o banco de dados `garagem_os_db`, criar as tabelas e popular o sistema com dados de teste financeiros.
 
-### 3. Executando o Front-end
-* Vá até a pasta `frontend`.
-* Abra o arquivo `index.html` em qualquer navegador web (ou utilize a extensão Live Server do VS Code).
-* O sistema estará pronto para uso.
-
-## ✨ Principais Funcionalidades Implementadas
-* **Cadastro:** Criação de novas Ordens de Serviço informando cliente, veículo e problema.
-* **Listagem Geral:** Visualização de todas as OSs em formato de tabela.
-* **Consulta e Atualização:** Possibilidade de editar os dados e mudar o status da OS (Pendente, Em Andamento, Concluído).
-* **Exclusão:** Remoção de Ordens de Serviço do banco de dados.
-
-## 🌐 Endpoints da API Disponíveis
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| `GET`  | `/api/os` | Lista todas as ordens de serviço. |
-| `GET`  | `/api/os/:id` | Busca os dados de uma única ordem de serviço pelo ID. |
-| `POST` | `/api/os` | Cadastra uma nova OS no banco de dados. |
-| `PUT`  | `/api/os/:id` | Atualiza os dados de uma OS existente. |
-| `DELETE`| `/api/os/:id` | Remove uma OS do banco de dados. |
-
-**Exemplo de Requisição POST para `/api/os` (JSON):**
-```json
-{
-  "cliente": "João Silva",
-  "veiculo": "Fiat Uno Placa ABC-1234",
-  "descricao_problema": "Bateria não carrega",
-  "status": "Pendente"
-}
+### 2. Executando o Back-end (API Node.js)
+* Abra o terminal na pasta onde o arquivo `server.js` e `package.json` estão localizados.
+* Instale as dependências do projeto executando o comando: 
+```bash
+  npm install
