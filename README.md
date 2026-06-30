@@ -1,57 +1,38 @@
 # 🚗 GarageOS Pro - Dark Edition
 
-Sistema web completo de gestão para oficinas mecânicas, desenvolvido com arquitetura em camadas e focado em dispositivos móveis (Design Mobile-First) com interface em tema escuro imersivo. O sistema gerencia o fluxo completo de ordens de serviço, orçamentos, controle automático de estoque de peças, comissionamento e alocação de mecânicos responsáveis.
+Sistema ERP completo e responsivo para gestão integrada de oficinas mecânicas. Este projeto foi desenvolvido como requisito avaliativo para a disciplina de **Programação II – Web**.
 
-Projeto desenvolvido como requisito avaliativo para a disciplina de **Programação II – Web** do curso de **Sistemas de Informação** (UEMG – Unidade Passos).
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-**Front-end:**
-* HTML5, CSS3 e JavaScript (Vanilla / API Fetch)
-* Tailwind CSS (Responsividade e estilização UI/UX)
-* FontAwesome (Ícones)
-
-**Back-end e API:**
-* Node.js
-* Express.js (Roteamento e Servidor Web)
-* CORS (Controle de acesso)
-
-**Banco de Dados:**
-* MySQL (Persistência de Dados e Relacionamentos)
+**Instituição:** UEMG (Universidade do Estado de Minas Gerais) - Unidade Passos  
+**Curso:** Sistemas de Informação  
+**Aluno:** Gabriel Henrique da Fraga Santos  
+**Professor Responsável:** Eduardo Henrique Marques Ferreira  
+**Período:** 5
 
 ---
 
-## ✨ Principais Funcionalidades Implementadas
+## 🛠️ Funcionalidades do Sistema
+O GarageOS Pro foi projetado com uma interface moderna (Dark Mode) focada em usabilidade mobile e desktop. O sistema conta com os seguintes módulos:
+- **Dashboard e Histórico:** Visão geral de Ordens de Serviço (Abertas e Prontas) e cálculo automático de faturamento e comissões.
+- **Gestão de Orçamentos:** Criação de orçamentos detalhados, envio automático de resumo para o cliente via WhatsApp e botão de "Aprovação" (que converte o orçamento em OS ativa).
+- **Estoque Inteligente:** Cadastro de peças com atualização dinâmica e integração direta com o formulário de serviços.
+- **Agenda Integrada:** Exibição cronológica dos serviços agendados para a semana atual.
+- **Gestão de Equipe:** Cadastro de mecânicos e controle de especialidades.
 
-O sistema atende a todos os requisitos de **CRUD (Create, Read, Update, Delete)** exigidos, distribuídos nos seguintes módulos inteligentes:
-
-* **Módulo de Orçamentos e Integração WhatsApp:** Geração de orçamentos com botão para aprovação rápida (transformando o orçamento em OS e debitando o estoque na hora) e botão para envio do resumo tabulado diretamente para o WhatsApp do cliente.
-* **Agenda da Semana Inteligente:** O dashboard filtra e exibe dinamicamente apenas os serviços agendados para a semana atual (Domingo a Sábado), organizados por horário.
-* **Dashboard Financeiro:** Monitoramento em tempo real de ordens abertas e concluídas, faturamento bruto (mão de obra vs. peças) e cálculo automático de comissão de 3% sobre autopeças.
-* **Gestão de Equipe (Mecânicos):** Cadastro, listagem e vínculo de mecânicos responsáveis pela execução das Ordens de Serviço.
-* **Fluxo Automatizado de Estoque:** Ao vincular uma peça a uma OS (ou ao aprovar um orçamento), o sistema debita 1 unidade do banco de dados e impede seleções de itens sem saldo.
-* **Regras de Precificação:** Descontos automáticos para pagamentos à vista (PIX/Dinheiro com 5% OFF) ou acréscimos de juros para parcelamentos longos (Cartão 4x com +3% de juros).
+## 💻 Tecnologias Utilizadas
+- **Front-end:** HTML5, JavaScript (Vanilla Assíncrono com Fetch API), Tailwind CSS (via CDN) e FontAwesome (Ícones).
+- **Back-end:** Node.js com Express.js e Cors.
+- **Banco de Dados:** MySQL (Consultas relacionais estruturadas).
 
 ---
 
-## 📁 Estrutura de Pastas do Projeto
+## 🚀 Como executar o projeto localmente
 
-O projeto adota uma arquitetura limpa, separando a regra de negócios da interface visual:
+### 1. Configuração do Banco de Dados
+1. Certifique-se de ter o XAMPP ou servidor MySQL ativo na sua máquina.
+2. Importe ou execute o conteúdo do arquivo `database.sql` no seu gerenciador (ex: phpMyAdmin). 
+3. O script criará automaticamente o banco `garagem_os_db`, as tabelas e inserirá dados de teste para facilitar a avaliação do sistema.
 
-```text
-/projeto-garagem-uemg
-│
-├── /backend/              # Camada de Servidor e API (Node.js)
-│   ├── node_modules/      # Dependências do Node
-│   ├── server.js          # Arquivo principal de rotas e conexão DB
-│   ├── package.json       # Configurações de pacotes (Express, MySQL2, Cors)
-│
-├── /frontend/             # Camada Visual (HTML, CSS, JS)
-│   ├── index.html         # Estrutura e Interface SPA (Single Page Application)
-│   ├── script.js          # Lógica Front-end e consumo da API REST
-│   ├── 14.png / 15.png    # Assets e imagens de fundo/logo
-│
-├── database.sql           # Script completo de criação e população do Banco de Dados
-└── README.md              # Documentação técnica
+### 2. Inicialização do Servidor (Back-end)
+1. Abra o terminal na pasta do projeto e navegue até a pasta do servidor:
+   ```bash
+   cd backend

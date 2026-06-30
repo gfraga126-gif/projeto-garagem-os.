@@ -49,10 +49,11 @@ if (selectPeca) {
 }
 
 function calcularPreview() {
-    const maoObra = parseFloat(iptMaoObra.value) || 0; const pecas = parseFloat(iptPecas.value) || 0; const pagamento = selectPagamento.value;
+    const maoObra = parseFloat(iptMaoObra.value) || 0; const pecas = parseFloat(iptPecas.value) || 0; const pagamento = selectPagamento ? selectPagamento.value : 'PIX';
     const subtotal = maoObra + pecas; let total = subtotal; let diferenca = 0; let label = "Desconto (5%):";
     
-    document.getElementById('preview-comissao').innerText = '+ R$ ' + (pecas * 0.03).toFixed(2).replace('.', ',');
+    const prevComissao = document.getElementById('preview-comissao');
+    if(prevComissao) prevComissao.innerText = '+ R$ ' + (pecas * 0.03).toFixed(2).replace('.', ',');
 
     if (pagamento === 'PIX' || pagamento === 'DINHEIRO') { total = subtotal * 0.95; diferenca = subtotal - total; label = "Desconto (5%):"; } 
     else if (pagamento.startsWith('CARTAO_')) {
@@ -61,14 +62,22 @@ function calcularPreview() {
     }
     
     totalCalculadoFinal = total;
-    document.getElementById('preview-subtotal').innerText = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
-    document.getElementById('preview-label-desconto').innerText = label;
+    
+    const prevSubtotal = document.getElementById('preview-subtotal');
+    if(prevSubtotal) prevSubtotal.innerText = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
+    
+    const prevLabelDesconto = document.getElementById('preview-label-desconto');
+    if(prevLabelDesconto) prevLabelDesconto.innerText = label;
     
     const campoDesconto = document.getElementById('preview-desconto');
-    if (pagamento === 'PIX' || pagamento === 'DINHEIRO') { campoDesconto.className = "font-bold text-green-500"; campoDesconto.innerText = '-R$ ' + diferenca.toFixed(2).replace('.', ','); } 
-    else if (pagamento.startsWith('CARTAO_') && parseInt(pagamento.split('_')[1]) >= 4) { campoDesconto.className = "font-bold text-red-500"; campoDesconto.innerText = '+R$ ' + diferenca.toFixed(2).replace('.', ','); } 
-    else { campoDesconto.className = "font-bold text-gray-600"; campoDesconto.innerText = 'R$ 0,00'; }
-    document.getElementById('preview-total').innerText = 'R$ ' + total.toFixed(2).replace('.', ',');
+    if(campoDesconto) {
+        if (pagamento === 'PIX' || pagamento === 'DINHEIRO') { campoDesconto.className = "font-bold text-green-500"; campoDesconto.innerText = '-R$ ' + diferenca.toFixed(2).replace('.', ','); } 
+        else if (pagamento.startsWith('CARTAO_') && parseInt(pagamento.split('_')[1]) >= 4) { campoDesconto.className = "font-bold text-red-500"; campoDesconto.innerText = '+R$ ' + diferenca.toFixed(2).replace('.', ','); } 
+        else { campoDesconto.className = "font-bold text-gray-600"; campoDesconto.innerText = 'R$ 0,00'; }
+    }
+    
+    const prevTotal = document.getElementById('preview-total');
+    if(prevTotal) prevTotal.innerText = 'R$ ' + total.toFixed(2).replace('.', ',');
 }
 
 if(iptMaoObra) iptMaoObra.addEventListener('input', calcularPreview); 
@@ -80,13 +89,16 @@ if(selectPagamento) selectPagamento.addEventListener('change', calcularPreview);
 async function carregarEstoque() {
     try {
         const res = await fetch(API_ESTOQUE_URL); const lista = await res.json();
-        const painel = document.getElementById('estoque-lista'); painel.innerHTML = '';
+        const painel = document.getElementById('estoque-lista'); 
+        if(!painel) return;
+        painel.innerHTML = '';
         if(lista.length === 0) painel.innerHTML = '<div class="text-center text-gray-600 text-xs py-4">O seu estoque está vazio.</div>';
         
-        selectPeca.innerHTML = '<option value="" data-preco="0">Nenhuma peça</option>';
+        if(selectPeca) selectPeca.innerHTML = '<option value="" data-preco="0">Nenhuma peça</option>';
+        
         lista.forEach(p => {
             painel.innerHTML += `<div class="card-dark p-3 flex justify-between items-center bg-[#0f0f0f] mb-3"><div><div class="text-sm font-bold text-gray-200">${p.nome}</div><div class="text-[10px] text-accent font-bold mt-1">R$ ${parseFloat(p.preco).toFixed(2).replace('.',',')}</div></div><div class="flex items-center gap-3"><div class="text-center px-3 py-1 bg-[#1a1a1a] rounded-lg border border-[#333]"><div class="text-[8px] text-gray-500 uppercase">Estoque</div><div class="font-black text-lg ${p.quantidade > 0 ? 'text-green-500' : 'text-red-500'}">${p.quantidade}</div></div><button onclick="excluirPeca(${p.id})" class="text-red-500 opacity-50 hover:opacity-100"><i class="fa-solid fa-trash"></i></button></div></div>`;
-            selectPeca.innerHTML += `<option value="${p.id}" data-preco="${p.preco}" ${p.quantidade <= 0 ? 'disabled' : ''}>${p.nome} (Est. ${p.quantidade}) - R$ ${parseFloat(p.preco).toFixed(2).replace('.',',')}</option>`;
+            if(selectPeca) selectPeca.innerHTML += `<option value="${p.id}" data-preco="${p.preco}" ${p.quantidade <= 0 ? 'disabled' : ''}>${p.nome} (Est. ${p.quantidade}) - R$ ${parseFloat(p.preco).toFixed(2).replace('.',',')}</option>`;
         });
     } catch(e) {}
 }
@@ -94,15 +106,18 @@ async function carregarEstoque() {
 async function carregarEquipe() {
     try {
         const res = await fetch(API_MECANICOS_URL); const lista = await res.json();
-        const painel = document.getElementById('equipe-lista'); painel.innerHTML = '';
+        const painel = document.getElementById('equipe-lista'); 
+        if(!painel) return;
+        painel.innerHTML = '';
+        
         const selectMecanico = document.getElementById('select_mecanico');
         
         if(lista.length === 0) painel.innerHTML = '<div class="text-center text-gray-600 text-xs py-4">Nenhum mecânico cadastrado.</div>';
-        selectMecanico.innerHTML = '<option value="">Não atribuído</option>';
+        if(selectMecanico) selectMecanico.innerHTML = '<option value="">Não atribuído</option>';
 
         lista.forEach(m => {
             painel.innerHTML += `<div class="card-dark p-3 flex justify-between items-center bg-[#0f0f0f] mb-3"><div><div class="text-sm font-bold text-gray-200"><i class="fa-solid fa-user-gear text-gray-500 mr-2"></i>${m.nome}</div><div class="text-[10px] text-accent font-bold mt-1">${m.especialidade} | ${m.telefone}</div></div><button onclick="excluirMecanico(${m.id})" class="text-red-500 opacity-50 hover:opacity-100 p-2"><i class="fa-solid fa-trash"></i></button></div>`;
-            selectMecanico.innerHTML += `<option value="${m.id}">${m.nome} (${m.especialidade})</option>`;
+            if(selectMecanico) selectMecanico.innerHTML += `<option value="${m.id}">${m.nome} (${m.especialidade})</option>`;
         });
     } catch(e) {}
 }
@@ -112,15 +127,18 @@ async function carregarOS() {
         const res = await fetch(API_OS_URL); const lista = await res.json();
         let abertas = 0; let prontas = 0; let fatMao = 0; let fatPeca = 0; let totalFat = 0; let comissao = 0;
         
-        const painelOS = document.getElementById('os-lista'); painelOS.innerHTML = '';
-        const painelOrcamentos = document.getElementById('orcamento-lista'); painelOrcamentos.innerHTML = '';
+        const painelOS = document.getElementById('os-lista'); 
+        if(painelOS) painelOS.innerHTML = '';
+        
+        const painelOrcamentos = document.getElementById('orcamento-lista'); 
+        if(painelOrcamentos) painelOrcamentos.innerHTML = '';
 
         lista.forEach(os => {
-            const comissaoOS = parseFloat(os.valor_pecas) * 0.03;
+            const comissaoOS = parseFloat(os.valor_pecas || 0) * 0.03;
             const dataFmt = os.data_agendamento ? new Date(os.data_agendamento).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : 'N/A';
             
             // 👉 SE FOR ORÇAMENTO
-            if (os.status_servico === 'Orçamento') {
+            if (os.status_servico === 'Orçamento' && painelOrcamentos) {
                 const osString = encodeURIComponent(JSON.stringify(os));
                 painelOrcamentos.innerHTML += `
                 <div class="card-dark p-4 relative overflow-hidden bg-[#141414] border-l-4 border-l-blue-500 mb-3">
@@ -134,7 +152,7 @@ async function carregarOS() {
                     <div class="bg-[#0f0f0f] rounded-lg p-3 text-xs text-gray-400 mb-3">
                         <div class="mb-1 text-gray-300"><i class="fa-solid fa-wrench text-gray-600 mr-1"></i> ${os.descricao}</div>
                         <div class="text-[10px] text-gray-500"><i class="fa-solid fa-user-gear mr-1"></i> Mecânico: ${os.mecanico_nome || 'N/A'}</div>
-                        <div class="text-[10px] text-accent font-bold mt-2">Valor Estimado: R$ ${parseFloat(os.total_pago).toFixed(2).replace('.',',')}</div>
+                        <div class="text-[10px] text-accent font-bold mt-2">Valor Estimado: R$ ${parseFloat(os.total_pago || 0).toFixed(2).replace('.',',')}</div>
                     </div>
                     <div class="flex gap-2 justify-end mt-2">
                         <button onclick="enviarWhats('${osString}')" class="px-2 py-1.5 bg-green-600 text-black font-black text-[9px] rounded flex items-center gap-1 uppercase tracking-wider hover:bg-green-500"><i class="fa-brands fa-whatsapp text-xs"></i> Whats</button>
@@ -144,8 +162,8 @@ async function carregarOS() {
                 </div>`;
             } 
             // 👉 SE FOR ORDEM DE SERVIÇO ATIVA
-            else {
-                if(os.status_servico === 'Pendente') { abertas++; } else { prontas++; fatMao += parseFloat(os.valor_mao_obra); fatPeca += parseFloat(os.valor_pecas); totalFat += parseFloat(os.total_pago); comissao += comissaoOS; }
+            else if (painelOS) {
+                if(os.status_servico === 'Pendente') { abertas++; } else { prontas++; fatMao += parseFloat(os.valor_mao_obra || 0); fatPeca += parseFloat(os.valor_pecas || 0); totalFat += parseFloat(os.total_pago || 0); comissao += comissaoOS; }
 
                 const cor = os.status_servico === 'Pronto' ? 'green' : 'yellow';
                 painelOS.innerHTML += `
@@ -161,7 +179,7 @@ async function carregarOS() {
                         <div class="flex justify-between items-center mt-2 pt-2 border-t border-[#1a1a1a] text-[9px] uppercase"><span>Data: ${dataFmt}</span><span>Comissão Peça: R$ ${comissaoOS.toFixed(2).replace('.',',')}</span></div>
                     </div>
                     <div class="flex justify-between items-center">
-                        <div class="font-black text-lg text-accent">R$ ${parseFloat(os.total_pago).toFixed(2).replace('.',',')}</div>
+                        <div class="font-black text-lg text-accent">R$ ${parseFloat(os.total_pago || 0).toFixed(2).replace('.',',')}</div>
                         <div class="flex gap-1">
                             ${os.status_servico === 'Pendente' ? `<button onclick="marcarPronto(${os.id})" class="w-8 h-8 bg-green-900/30 text-green-500 rounded flex items-center justify-center hover:bg-green-900/60" title="Marcar Pronto"><i class="fa-solid fa-check text-xs"></i></button>` : ''}
                             <button onclick="carregarParaEdicao(${os.id})" class="w-8 h-8 bg-blue-900/30 text-blue-500 rounded flex items-center justify-center hover:bg-blue-900/60" title="Editar OS"><i class="fa-solid fa-pencil text-xs"></i></button>
@@ -172,12 +190,12 @@ async function carregarOS() {
             }
         });
 
-        document.getElementById('dash-abertas').innerText = abertas.toString().padStart(2, '0');
-        document.getElementById('dash-prontas').innerText = prontas.toString().padStart(2, '0');
-        document.getElementById('dash-mao-obra').innerText = 'R$ ' + fatMao.toFixed(2).replace('.',',');
-        document.getElementById('dash-pecas').innerText = 'R$ ' + fatPeca.toFixed(2).replace('.',',');
-        document.getElementById('dash-comissao').innerText = '+ R$ ' + comissao.toFixed(2).replace('.',',');
-        document.getElementById('dash-total').innerText = 'R$ ' + totalFat.toFixed(2).replace('.',',');
+        if(document.getElementById('dash-abertas')) document.getElementById('dash-abertas').innerText = abertas.toString().padStart(2, '0');
+        if(document.getElementById('dash-prontas')) document.getElementById('dash-prontas').innerText = prontas.toString().padStart(2, '0');
+        if(document.getElementById('dash-mao-obra')) document.getElementById('dash-mao-obra').innerText = 'R$ ' + fatMao.toFixed(2).replace('.',',');
+        if(document.getElementById('dash-pecas')) document.getElementById('dash-pecas').innerText = 'R$ ' + fatPeca.toFixed(2).replace('.',',');
+        if(document.getElementById('dash-comissao')) document.getElementById('dash-comissao').innerText = '+ R$ ' + comissao.toFixed(2).replace('.',',');
+        if(document.getElementById('dash-total')) document.getElementById('dash-total').innerText = 'R$ ' + totalFat.toFixed(2).replace('.',',');
 
         // AGENDA DA SEMANA
         const painelAgenda = document.getElementById('agenda-semana-lista');
@@ -202,7 +220,7 @@ async function carregarOS() {
             const partesData = os.data_agendamento.split('T')[0].split('-');
             const dataOS = new Date(partesData[0], partesData[1]-1, partesData[2]);
             
-            if (dataOS >= primeiroDia && dataOS <= ultimoDia) {
+            if (dataOS >= primeiroDia && dataOS <= ultimoDia && painelAgenda) {
                 qtdAgenda++;
                 const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
                 const nomeDia = diasSemana[dataOS.getDay()];
@@ -217,7 +235,7 @@ async function carregarOS() {
                             <div class="text-[11px] font-black text-accent leading-none mt-1">${dataFormatada}</div>
                         </div>
                         <div>
-                            <div class="text-xs font-bold text-gray-200 flex items-center gap-1.5"><i class="fa-regular fa-clock text-accent"></i> ${os.horario_entrega.substring(0,5)}</div>
+                            <div class="text-xs font-bold text-gray-200 flex items-center gap-1.5"><i class="fa-regular fa-clock text-accent"></i> ${os.horario_entrega ? os.horario_entrega.substring(0,5) : ''}</div>
                             <div class="text-[10px] text-gray-400 mt-1"><span class="text-white font-bold">${os.modelo_veiculo}</span></div>
                         </div>
                     </div>
@@ -232,52 +250,61 @@ async function carregarOS() {
         if(painelAgenda && qtdAgenda === 0) {
             painelAgenda.innerHTML = '<div class="text-center p-4 text-gray-600 text-[10px] uppercase font-bold tracking-widest border border-dashed border-[#333] rounded-lg">Agenda livre nesta semana</div>';
         }
-        document.getElementById('badge-agenda-qtd').innerText = qtdAgenda;
+        if(document.getElementById('badge-agenda-qtd')) document.getElementById('badge-agenda-qtd').innerText = qtdAgenda;
 
     } catch(e) {}
 }
 
 // ================= SALVAMENTOS DE FORMULÁRIO E EDIÇÃO =================
 
-document.getElementById('formOS').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const dados = {
-        status_servico: document.getElementById('status_servico').value,
-        modelo_veiculo: document.getElementById('modelo_veiculo').value,
-        placa: document.getElementById('placa_veiculo').value,
-        descricao: document.getElementById('descricao_servico').value,
-        mecanico_id: document.getElementById('select_mecanico').value || null,
-        peca_id: document.getElementById('select_peca').value || null,
-        valor_mao_obra: document.getElementById('valor_mao_obra').value,
-        valor_pecas: document.getElementById('valor_pecas').value,
-        data_agendamento: document.getElementById('data_agendamento').value,
-        horario_entrega: document.getElementById('horario_entrega').value,
-        tempo_estimado: document.getElementById('tempo_estimado').value,
-        logistica: document.getElementById('logistica').value,
-        forma_pagamento: document.getElementById('pagamento').value,
-        total_pago: totalCalculadoFinal
-    };
+const formOS = document.getElementById('formOS');
+if (formOS) {
+    formOS.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const safeVal = (id) => {
+            const el = document.getElementById(id);
+            return el ? el.value : '';
+        };
 
-    if (modoEdicaoId) {
-        const res = await fetch(`${API_OS_URL}/${modoEdicaoId}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dados)});
-        if(!res.ok) { const erroSrv = await res.json(); alert("❌ ERRO MYSQL:\n" + erroSrv.erro); return; }
-        alert("✅ Registro atualizado com sucesso!");
-        modoEdicaoId = null;
-    } else {
-        const res = await fetch(API_OS_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dados)});
-        if(!res.ok) { const erroSrv = await res.json(); alert("❌ ERRO MYSQL:\n" + erroSrv.erro); return; }
-        alert("✅ Registro criado com sucesso!");
-    }
+        const dados = {
+            status_servico: safeVal('status_servico'),
+            modelo_veiculo: safeVal('modelo_veiculo'),
+            placa: safeVal('placa_veiculo'),
+            descricao: safeVal('descricao_servico'),
+            mecanico_id: safeVal('select_mecanico') || null,
+            peca_id: safeVal('select_peca') || null,
+            valor_mao_obra: safeVal('valor_mao_obra'),
+            valor_pecas: safeVal('valor_pecas'),
+            data_agendamento: safeVal('data_agendamento'),
+            horario_entrega: safeVal('horario_entrega'),
+            tempo_estimado: safeVal('tempo_estimado'),
+            logistica: safeVal('logistica'),
+            forma_pagamento: safeVal('pagamento'),
+            total_pago: totalCalculadoFinal
+        };
 
-    document.getElementById('formOS').reset(); carregarOS(); carregarEstoque(); 
-    if(dados.status_servico === 'Orçamento') { changeTab('orcamentos'); } else { changeTab('painel'); }
-});
+        if (modoEdicaoId) {
+            const res = await fetch(`${API_OS_URL}/${modoEdicaoId}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dados)});
+            if(!res.ok) { const erroSrv = await res.json(); alert("❌ ERRO MYSQL:\n" + (erroSrv.erro || erroSrv.msg)); return; }
+            alert("✅ Registro atualizado com sucesso!");
+            modoEdicaoId = null;
+        } else {
+            const res = await fetch(API_OS_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dados)});
+            if(!res.ok) { const erroSrv = await res.json(); alert("❌ ERRO MYSQL:\n" + (erroSrv.erro || erroSrv.msg)); return; }
+            alert("✅ Registro criado com sucesso!");
+        }
 
-// 👉 CARREGAR PARA EDIÇÃO
+        formOS.reset(); carregarOS(); carregarEstoque(); 
+        if(dados.status_servico === 'Orçamento') { changeTab('orcamentos'); } else { changeTab('painel'); }
+    });
+}
+
+// 👉 CARREGAR PARA EDIÇÃO (Versão Blindada)
 async function carregarParaEdicao(id) {
     try {
         const res = await fetch(`${API_OS_URL}/${id}`); 
-        if(!res.ok) throw new Error();
+        if(!res.ok) throw new Error("Falha na resposta do servidor.");
         const os = await res.json();
         
         if(!os || !os.id) return alert("Erro ao carregar dados do servidor.");
@@ -285,24 +312,34 @@ async function carregarParaEdicao(id) {
         modoEdicaoId = id; 
         changeTab('agendar'); 
         
-        // Garante que o status no form reflete se é Orçamento ou OS normal
-        document.getElementById('status_servico').value = os.status_servico === 'Orçamento' ? 'Orçamento' : 'Pendente';
-        
-        document.getElementById('modelo_veiculo').value = os.modelo_veiculo || '';
-        document.getElementById('placa_veiculo').value = os.placa || '';
-        document.getElementById('descricao_servico').value = os.descricao || '';
-        document.getElementById('select_mecanico').value = os.mecanico_id || '';
-        document.getElementById('select_peca').value = os.peca_id || '';
-        document.getElementById('valor_mao_obra').value = os.valor_mao_obra || '';
-        document.getElementById('valor_pecas').value = os.valor_pecas || '';
-        document.getElementById('data_agendamento').value = os.data_agendamento ? os.data_agendamento.split('T')[0] : '';
-        document.getElementById('horario_entrega').value = os.horario_entrega || '';
-        document.getElementById('tempo_estimado').value = os.tempo_estimado || '';
-        document.getElementById('logistica').value = os.logistica || 'Cliente busca';
-        document.getElementById('pagamento').value = os.forma_pagamento || 'PIX';
+        const preencher = (campoId, valor) => {
+            const elemento = document.getElementById(campoId);
+            if (elemento) {
+                elemento.value = valor;
+            } else {
+                console.warn(`Aviso visual: O campo '${campoId}' não foi encontrado no seu HTML. Ignorando...`);
+            }
+        };
+
+        preencher('status_servico', os.status_servico === 'Orçamento' ? 'Orçamento' : 'Pendente');
+        preencher('modelo_veiculo', os.modelo_veiculo || '');
+        preencher('placa_veiculo', os.placa || '');
+        preencher('descricao_servico', os.descricao || '');
+        preencher('select_mecanico', os.mecanico_id || '');
+        preencher('select_peca', os.peca_id || '');
+        preencher('valor_mao_obra', os.valor_mao_obra || '');
+        preencher('valor_pecas', os.valor_pecas || '');
+        preencher('data_agendamento', os.data_agendamento ? os.data_agendamento.split('T')[0] : '');
+        preencher('horario_entrega', os.horario_entrega || '');
+        preencher('tempo_estimado', os.tempo_estimado || '');
+        preencher('logistica', os.logistica || 'Cliente busca');
+        preencher('pagamento', os.forma_pagamento || 'PIX');
         
         calcularPreview(); 
-    } catch(e) { alert("Erro de conexão ao contactar a Base de Dados para edição."); }
+    } catch(e) { 
+        console.error("ERRO DETECTADO PELO JAVASCRIPT:", e);
+        alert("Erro ao preencher a tela. Olhe a aba Console (F12) para ver o motivo real!"); 
+    }
 }
 
 // 👉 APROVAÇÃO ROBUSTA
@@ -324,9 +361,9 @@ async function aprovarOrcamento(id) {
 
 function enviarWhats(osString) {
     const os = JSON.parse(decodeURIComponent(osString));
-    const totalFmt = parseFloat(os.total_pago).toFixed(2).replace('.',',');
-    const maoFmt = parseFloat(os.valor_mao_obra).toFixed(2).replace('.',',');
-    const pecasFmt = parseFloat(os.valor_pecas).toFixed(2).replace('.',',');
+    const totalFmt = parseFloat(os.total_pago || 0).toFixed(2).replace('.',',');
+    const maoFmt = parseFloat(os.valor_mao_obra || 0).toFixed(2).replace('.',',');
+    const pecasFmt = parseFloat(os.valor_pecas || 0).toFixed(2).replace('.',',');
 
     const texto = encodeURIComponent(
 `*GARAGEOS PRO - ORÇAMENTO* 🚗
@@ -339,7 +376,7 @@ function enviarWhats(osString) {
 ---------------------------------------
 *Mão de Obra:* R$ ${maoFmt}
 *Peças:* R$ ${pecasFmt}
-*CONDIÇÃO:* ${os.forma_pagamento}
+*CONDIÇÃO:* ${os.forma_pagamento || 'A combinar'}
 *TOTAL ESTIMADO:* R$ ${totalFmt}
 ---------------------------------------
 _Ficamos aguardando sua autorização para iniciar o serviço!_`
@@ -347,21 +384,35 @@ _Ficamos aguardando sua autorização para iniciar o serviço!_`
     window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
 }
 
-document.getElementById('formEstoque').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const dados = { nome: document.getElementById('nome_peca').value, preco: document.getElementById('preco_peca').value, quantidade: document.getElementById('quantidade_peca').value };
-    const res = await fetch(API_ESTOQUE_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dados)});
-    if(!res.ok) return alert("Erro ao salvar peça.");
-    document.getElementById('formEstoque').reset(); carregarEstoque(); changeTab('estoque');
-});
+const formEstoque = document.getElementById('formEstoque');
+if (formEstoque) {
+    formEstoque.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const dados = { 
+            nome_peca: document.getElementById('nome_peca').value, 
+            preco_unitario: document.getElementById('preco_peca').value, 
+            quantidade: document.getElementById('quantidade_peca').value 
+        };
+        const res = await fetch(API_ESTOQUE_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dados)});
+        if(!res.ok) return alert("Erro ao salvar peça.");
+        formEstoque.reset(); carregarEstoque(); changeTab('estoque');
+    });
+}
 
-document.getElementById('formEquipe').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const dados = { nome: document.getElementById('nome_mecanico').value, especialidade: document.getElementById('especialidade_mecanico').value, telefone: document.getElementById('telefone_mecanico').value };
-    const res = await fetch(API_MECANICOS_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dados)});
-    if(!res.ok) return alert("Erro ao salvar mecânico.");
-    document.getElementById('formEquipe').reset(); carregarEquipe(); changeTab('equipe');
-});
+const formEquipe = document.getElementById('formEquipe');
+if (formEquipe) {
+    formEquipe.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const dados = { 
+            nome: document.getElementById('nome_mecanico').value, 
+            especialidade: document.getElementById('especialidade_mecanico').value, 
+            telefone: document.getElementById('telefone_mecanico').value 
+        };
+        const res = await fetch(API_MECANICOS_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dados)});
+        if(!res.ok) return alert("Erro ao salvar mecânico.");
+        formEquipe.reset(); carregarEquipe(); changeTab('equipe');
+    });
+}
 
 async function marcarPronto(id) { await fetch(`${API_OS_URL}/${id}/pronto`, { method: 'PUT' }); carregarOS(); }
 async function excluirOS(id) { if(confirm('Excluir registro?')) { await fetch(`${API_OS_URL}/${id}`, { method: 'DELETE' }); carregarOS(); } }
